@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:research_activity_tracking/presentation/pages/auth_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Research Activity Tracking',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,12 +32,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('КурСадЧ По ТИриПЫЗЫ'),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
-    );
+    return const AuthPage();
+    //   Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text('КурСадЧ По ТИриПЫЗЫ'),
+    //     backgroundColor: Colors.black,
+    //     centerTitle: true,
+    //   ),
+    // );
   }
 }
