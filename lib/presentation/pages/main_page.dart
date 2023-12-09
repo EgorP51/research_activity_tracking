@@ -1,15 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:research_activity_tracking/data/auth_service.dart';
 import 'package:research_activity_tracking/presentation/pages/profile_page.dart';
 import 'package:research_activity_tracking/presentation/pages/scientific_publication_page.dart';
 
 import '../../data/models/scientific_publication.dart';
-import '../../data/models/user.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({super.key, required this.user});
 
   final User? user;
+
   List<ScientificPublication> publications = List.generate(
     12,
     (index) => ScientificPublication(
@@ -68,6 +70,12 @@ class MainPage extends StatelessWidget {
                 child: const Icon(CupertinoIcons.person, size: 50),
               ),
               const Text('Current user info'),
+              IconButton(
+                onPressed: () {
+                  AuthService().signOut();
+                },
+                icon: const Icon(Icons.login_rounded),
+              )
             ],
           ),
         ),

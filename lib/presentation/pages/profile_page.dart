@@ -1,8 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/presentation/pages/add_publication_page.dart';
-
-import '../../data/models/user.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, required this.user});
@@ -41,8 +40,7 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${user.firstName} ${user.lastName}'),
-            Text(user.role),
+            Text('${user.displayName} ${user.uid}'),
             const SizedBox(height: 50),
             const Text('My publications: '),
             ListView.builder(

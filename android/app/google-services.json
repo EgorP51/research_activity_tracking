@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231594234435",
+    "project_id": "research-activity-tracking",
+    "storage_bucket": "research-activity-tracking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231594234435:android:df8ca2ef762944649d7af6",
+        "android_client_info": {
+          "package_name": "com.example.research_activity_tracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeUYfDiPaRmZOrAZhKiHKsWapdkbkatY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/presentation/pages/auth_page.dart';
+import 'package:research_activity_tracking/presentation/pages/main_page.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -32,13 +41,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const AuthPage();
-    //   Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text('КурСадЧ По ТИриПЫЗЫ'),
-    //     backgroundColor: Colors.black,
-    //     centerTitle: true,
-    //   ),
-    // );
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MainPage(user: snapshot.data);
+        } else if (snapshot.hasError) {
+          return const Scaffold(backgroundColor: Colors.red);
+        } else {
+          return const AuthPage();
+        }
+      },
+    );
   }
 }

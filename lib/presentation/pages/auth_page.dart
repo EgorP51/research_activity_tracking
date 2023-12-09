@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../data/models/user.dart';
-import 'main_page.dart';
+import 'package:research_activity_tracking/data/auth_service.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AuthWidget();
+    return const AuthWidget();
   }
 }
 
@@ -24,6 +22,16 @@ class AuthWidget extends StatefulWidget {
 
 class _AuthWidgetState extends State<AuthWidget> {
   var currentState = PageState.login;
+
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +58,14 @@ class _AuthWidgetState extends State<AuthWidget> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
+                      controller: _emailController,
                       decoration: const InputDecoration(
                         labelText: 'email',
                         prefixIcon: Icon(Icons.email),
                       ),
                     ),
                     TextFormField(
+                      controller: _passwordController,
                       decoration: const InputDecoration(
                         labelText: 'password',
                         prefixIcon: Icon(Icons.password),
@@ -91,21 +101,17 @@ class _AuthWidgetState extends State<AuthWidget> {
                             : 'sign in',
                       ),
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainPage(
-                              // TODO: change later!
-                              user: User(
-                                email: 'cool.man@gmail.com',
-                                firstName: 'Cool',
-                                lastName: 'Man😎',
-                                id: 12,
-                                role: 'scientist',
-                              ),
-                            ),
-                          ),
-                        );
+                        if (currentState == PageState.login) {
+                          AuthService().signInWithEmail(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                        } else {
+                          AuthService().signUpWithEmail(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                        }
                       },
                     )
                   ],
