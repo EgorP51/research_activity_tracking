@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/data/database_service.dart';
 import 'package:research_activity_tracking/presentation/pages/add_publication_page.dart';
 import 'package:research_activity_tracking/presentation/pages/scientific_publication_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/models/scientific_publication.dart';
 
@@ -116,17 +117,17 @@ class ProfilePage extends StatelessWidget {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8
-            ),
-            child: CupertinoButton(
-              color: Colors.black,
-              onPressed: () {},
-              child: const Text('become a scientific adviser'),
-            ),
-          ),
+          // Container(
+          //   width: double.infinity,
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 8
+          //   ),
+          //   child: CupertinoButton(
+          //     color: Colors.black,
+          //     onPressed: () {},
+          //     child: const Text('become a scientific adviser'),
+          //   ),
+          // ),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -135,12 +136,31 @@ class ProfilePage extends StatelessWidget {
             ),
             child: CupertinoButton(
               color: Colors.black,
-              onPressed: () {},
+              onPressed: () {
+                sendMessageToAdmin();
+              },
               child: const Text('contact admin'),
             ),
           ),
         ],
       ),
     );
+  }
+  
+  void sendMessageToAdmin() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: '63584ee@gmail.com',
+      queryParameters: {
+        'subject': 'subject',
+        'body': 'body',
+      },
+    );
+
+    if (await canLaunch(emailLaunchUri.toString())) {
+      await launch(emailLaunchUri.toString());
+    } else {
+      throw 'Could not launch email';
+    }
   }
 }
