@@ -7,7 +7,7 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, required this.user});
 
   final User user;
-
+// ПУбликации по айди автора !!!
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +40,7 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${user.displayName} ${user.uid}'),
+            Text('${user.displayName}'),
             const SizedBox(height: 50),
             const Text('My publications: '),
             ListView.builder(

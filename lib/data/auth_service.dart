@@ -1,14 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'database_service.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseService _databaseService = DatabaseService();
 
-  Future<UserCredential?> signUpWithEmail(String email, String password) async {
+  Future<UserCredential?> signUpWithEmail(String email, String password, String displayName) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      await userCredential.user!.updateDisplayName(displayName);
+
+      Map<String, dynamic> userData = {
+        'email': email,
+        'role': 'scientists',
+        'displayName' : displayName,
+      };
+
+      await _databaseService.setData(
+        'scientists',
+        userCredential.user!.uid,
+        userData,
+      );
+
       return userCredential;
     } catch (e) {
       print("Error during email registration: $e");

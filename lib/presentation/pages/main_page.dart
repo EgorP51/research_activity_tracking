@@ -12,6 +12,7 @@ class MainPage extends StatelessWidget {
 
   final User? user;
 
+  // Выборка всех публикаций!!
   List<ScientificPublication> publications = List.generate(
     12,
     (index) => ScientificPublication(
@@ -69,7 +70,7 @@ class MainPage extends StatelessWidget {
                 },
                 child: const Icon(CupertinoIcons.person, size: 50),
               ),
-              const Text('Current user info'),
+              Text(user?.displayName ?? 'user info'),
               IconButton(
                 onPressed: () {
                   AuthService().signOut();

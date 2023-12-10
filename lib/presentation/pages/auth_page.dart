@@ -25,11 +25,15 @@ class _AuthWidgetState extends State<AuthWidget> {
 
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
 
   @override
   void initState() {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
     super.initState();
   }
 
@@ -57,6 +61,20 @@ class _AuthWidgetState extends State<AuthWidget> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (currentState == PageState.registration) ...[
+                      TextFormField(
+                        controller: _firstNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'First name',
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _lastNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Last name',
+                        ),
+                      ),
+                    ],
                     TextFormField(
                       controller: _emailController,
                       decoration: const InputDecoration(
@@ -108,9 +126,9 @@ class _AuthWidgetState extends State<AuthWidget> {
                           );
                         } else {
                           AuthService().signUpWithEmail(
-                            _emailController.text,
-                            _passwordController.text,
-                          );
+                              _emailController.text,
+                              _passwordController.text,
+                              '${_firstNameController.text} ${_lastNameController.text}');
                         }
                       },
                     )
