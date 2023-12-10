@@ -74,4 +74,41 @@ class DatabaseService {
       print('Error adding publication to scientist: $e');
     }
   }
+
+  Future<void> changeUserRole({
+    required String userId,
+    required String newRole,
+  }) async {
+    try {
+      await _db.collection('scientists').doc(userId).update({
+        'role': newRole,
+      });
+    } catch (e) {
+      print('Error changing user role: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deletePublication(String publicationId) async {
+    try {
+      await _db.collection('publications').doc(publicationId).delete();
+    } catch (e) {
+      print('Error deleting publication: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> verifyPublication(String publicationId) async {
+    try {
+      await _db.collection('publications').doc(publicationId).update({
+        'verified': "true",
+      });
+
+      print('Publication verification status updated successfully');
+    } catch (e) {
+      print('Error updating publication verification status: $e');
+      // Handle the error as needed
+      throw e;
+    }
+  }
 }

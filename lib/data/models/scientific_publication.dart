@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-
 ScientificPublication scientificPublicationFromJson(String str) =>
     ScientificPublication.fromJson(json.decode(str));
 
@@ -14,6 +12,7 @@ class ScientificPublication {
   String? publicationYear;
   String? authorId;
   String? filePath;
+  bool? verified;
 
   ScientificPublication({
     this.id,
@@ -21,6 +20,7 @@ class ScientificPublication {
     this.publicationYear,
     this.authorId,
     this.filePath,
+    this.verified,
   });
 
   factory ScientificPublication.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +30,7 @@ class ScientificPublication {
         publicationYear: json["publicationYear"],
         authorId: json["authorId"],
         filePath: json["filePath"],
+        verified: json["verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +39,7 @@ class ScientificPublication {
         "publicationYear": publicationYear,
         "authorId": authorId,
         "filePath": filePath,
+        "verified": verified,
       };
 
   static List<ScientificPublication> parseFromSnapshot(collection) {
@@ -48,6 +50,7 @@ class ScientificPublication {
         filePath: collection[index]['filePath'],
         publicationTitle: collection[index]['publicationTitle'],
         publicationYear: collection[index]['publicationYear'],
+        verified: (collection[index]['verified'] == "true")
       );
     });
   }

@@ -38,25 +38,45 @@ class ProfilePage extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 4,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${user.displayName}'),
-            const SizedBox(height: 50),
-            const Text('My publications: '),
-            FutureBuilder(
-              future: DatabaseService().getData('scientists', user.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final List<ScientificPublication> list =
-                      ScientificPublication.parseFromSnapshot(snapshot.data?['publications']);
-
-                  return ListView.builder(
+      body: FutureBuilder(
+        future: DatabaseService().getData('scientists', user.uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final List<ScientificPublication> list =
+                ScientificPublication.parseFromSnapshot(
+                    snapshot.data?['publications']);
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    '${user.displayName}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${snapshot.data?['role']}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  const Text(
+                    'My publications: ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: list.length,
@@ -76,19 +96,50 @@ class ProfilePage extends StatelessWidget {
                             );
                           },
                           title: Text(publication.publicationTitle ?? ''),
-                          subtitle:
-                              Text(publication.publicationYear.toString()),
+                          subtitle: Text(
+                            publication.publicationYear.toString(),
+                          ),
                         ),
                       );
                     },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
+                  )
+                ],
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8
             ),
-          ],
-        ),
+            child: CupertinoButton(
+              color: Colors.black,
+              onPressed: () {},
+              child: const Text('become a scientific adviser'),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4
+            ),
+            child: CupertinoButton(
+              color: Colors.black,
+              onPressed: () {},
+              child: const Text('contact admin'),
+            ),
+          ),
+        ],
       ),
     );
   }

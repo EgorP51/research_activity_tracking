@@ -18,17 +18,24 @@ class ScientificPublicationPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 4,
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
-            Text('Title: ${publication.publicationTitle}' ?? ''),
-            Text('year: ${publication.publicationYear}'),
-            const SizedBox(height: 50),
+            Text(
+              'Title: ${publication.publicationTitle}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text('year: ${publication.publicationYear}',style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+            ),),
+            const SizedBox(height: 90),
             Center(
               child: InkWell(
                 child: Column(

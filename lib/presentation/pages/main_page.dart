@@ -2,119 +2,168 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/data/auth_service.dart';
+import 'package:research_activity_tracking/presentation/pages/admin_page.dart';
 import 'package:research_activity_tracking/presentation/pages/profile_page.dart';
+import 'package:research_activity_tracking/presentation/pages/scientific_adviser_page.dart';
 import 'package:research_activity_tracking/presentation/pages/scientific_publication_page.dart';
 
 import '../../data/database_service.dart';
 import '../../data/models/scientific_publication.dart';
 
-class MainPage extends StatelessWidget {
-  MainPage({super.key, required this.user});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.user});
 
   final User? user;
 
-  // Выборка всех публикаций!!
-  List<ScientificPublication> publications = List.generate(
-    12,
-    (index) => ScientificPublication(
-      id: '123',
-      publicationTitle: 'Scientific publication title',
-      publicationYear: '2004',
-      authorId: '123',
-      filePath: 'filePath',
-    ),
-  );
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // here list of scientific publication
+    rebuildAllChildren(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('main_page'),
         backgroundColor: Colors.black,
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                rebuildAllChildren(context);
+              });
+            },
+            icon: const Icon(
+              Icons.refresh,
+            ),
+          ),
+        ],
       ),
-      body: FutureBuilder(
-        future: DatabaseService().getAllDocuments('publications'),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final List<ScientificPublication> list =
-            ScientificPublication.parseFromSnapshot(snapshot.data);
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FutureBuilder(
+          future: DatabaseService().getAllDocuments('publications'),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final List<ScientificPublication> list =
+                  ScientificPublication.parseFromSnapshot(snapshot.data);
 
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                final publication = list[index];
-                return Card(
-                  elevation: 5,
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ScientificPublicationPage(
-                            publication: publication,
+              return RefreshIndicator(
+                onRefresh: () async => rebuildAllChildren(context),
+                child: Scrollbar(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final publication = list[index];
+                      return Card(
+                        elevation: 5,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ScientificPublicationPage(
+                                  publication: publication,
+                                ),
+                              ),
+                            );
+                          },
+                          title: Text(publication.publicationTitle ?? ''),
+                          subtitle:
+                              Text(publication.publicationYear.toString()),
+                          trailing: Text(
+                            (publication.verified == true)
+                                ? 'verified'
+                                : 'not verified',
                           ),
                         ),
                       );
                     },
-                    title: Text(publication.publicationTitle ?? ''),
-                    subtitle:
-                    Text(publication.publicationYear.toString()),
                   ),
-                );
-              },
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+                ),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
       ),
-      // body: ListView.separated(
-      //   itemBuilder: (context, index) {
-      //     return ListTile(
-      //       title: Text(publications[index].publicationTitle ?? ""),
-      //       subtitle: Text(publications[index].publicationYear.toString()),
-      //       onTap: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (context) => ScientificPublicationPage(
-      //               publication: publications[index],
-      //             ),
-      //           ),
-      //         );
-      //       },
-      //     );
-      //   },
-      //   separatorBuilder: (context, index) => const Divider(),
-      //   itemCount: publications.length,
-      // ),
       drawer: Drawer(
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 70),
               InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfilePage(user: user!),
+                      builder: (context) => ProfilePage(user: widget.user!),
                     ),
                   );
                 },
                 child: const Icon(CupertinoIcons.person, size: 50),
               ),
-              Text(user?.displayName ?? 'user info'),
+              Text(widget.user?.displayName ?? 'user'),
+              FutureBuilder(
+                future:
+                    DatabaseService().getData('scientists', widget.user!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data?['role'] == 'admin') {
+                      return CupertinoButton(
+                        child: const Text('go to admin page'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AdminPage(),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (snapshot.data?['role'] == 'scientific adviser') {
+                      return CupertinoButton(
+                        child: const Text('scientific adviser page'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ScientificAdviserPage(),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+              const Spacer(),
+              CupertinoButton(onPressed: (){}, child: const Text('Info about us')),
+              CupertinoButton(onPressed: (){}, child: const Text('Privacy policy')),
               IconButton(
                 onPressed: () {
                   AuthService().signOut();
                 },
                 icon: const Icon(Icons.login_rounded),
-              )
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -127,6 +127,7 @@ class _AddPublicationPageState extends State<AddPublicationPage> {
       'publicationYear': _publicationYearController.text,
       'authorId': widget.user.uid,
       'filePath': filePath,
+      'verified': false,
     };
 
     await service.setData(
