@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/data/models/scientific_publication.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScientificPublicationPage extends StatelessWidget {
   const ScientificPublicationPage({
@@ -25,12 +26,33 @@ class ScientificPublicationPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(publication.publicationTitle),
-            Text('{author: ${publication.authorId}}'),
+            Text('Title: ${publication.publicationTitle}' ?? ''),
             Text('year: ${publication.publicationYear}'),
             const SizedBox(height: 50),
-            const Text('Content'),
-            const Placeholder(),
+            Center(
+              child: InkWell(
+                child: Column(
+                  children: [
+                    SizedBox.square(
+                      dimension: 100,
+                      child: Image.asset('assets/pdf-icon.png'),
+                    ),
+                    const Text(
+                      'Download file',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                onTap: () async {
+                  if (!await launchUrl(Uri.parse(publication.filePath ?? ''))) {
+                    throw Exception(
+                      'Could not launch ${publication.filePath ?? ''}',
+                    );
+                  }
+                },
+              ),
+            )
           ],
         ),
       ),

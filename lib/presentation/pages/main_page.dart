@@ -5,6 +5,7 @@ import 'package:research_activity_tracking/data/auth_service.dart';
 import 'package:research_activity_tracking/presentation/pages/profile_page.dart';
 import 'package:research_activity_tracking/presentation/pages/scientific_publication_page.dart';
 
+import '../../data/database_service.dart';
 import '../../data/models/scientific_publication.dart';
 
 class MainPage extends StatelessWidget {
@@ -16,11 +17,10 @@ class MainPage extends StatelessWidget {
   List<ScientificPublication> publications = List.generate(
     12,
     (index) => ScientificPublication(
-      id: 123,
+      id: '123',
       publicationTitle: 'Scientific publication title',
-      publicationYear: 2004,
-      authorId: 123,
-      fieldId: 123,
+      publicationYear: '2004',
+      authorId: '123',
       filePath: 'filePath',
     ),
   );
@@ -34,26 +34,64 @@ class MainPage extends StatelessWidget {
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      body: ListView.separated(
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(publications[index].publicationTitle),
-            subtitle: Text(publications[index].publicationYear.toString()),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ScientificPublicationPage(
-                    publication: publications[index],
+      body: FutureBuilder(
+        future: DatabaseService().getAllDocuments('publications'),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final List<ScientificPublication> list =
+            ScientificPublication.parseFromSnapshot(snapshot.data);
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final publication = list[index];
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ScientificPublicationPage(
+                            publication: publication,
+                          ),
+                        ),
+                      );
+                    },
+                    title: Text(publication.publicationTitle ?? ''),
+                    subtitle:
+                    Text(publication.publicationYear.toString()),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         },
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: publications.length,
       ),
+      // body: ListView.separated(
+      //   itemBuilder: (context, index) {
+      //     return ListTile(
+      //       title: Text(publications[index].publicationTitle ?? ""),
+      //       subtitle: Text(publications[index].publicationYear.toString()),
+      //       onTap: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => ScientificPublicationPage(
+      //               publication: publications[index],
+      //             ),
+      //           ),
+      //         );
+      //       },
+      //     );
+      //   },
+      //   separatorBuilder: (context, index) => const Divider(),
+      //   itemCount: publications.length,
+      // ),
       drawer: Drawer(
         child: Center(
           child: Column(

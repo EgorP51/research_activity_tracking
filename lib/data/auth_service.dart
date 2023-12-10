@@ -17,9 +17,11 @@ class AuthService {
       await userCredential.user!.updateDisplayName(displayName);
 
       Map<String, dynamic> userData = {
+        'authorId' : userCredential.user!.uid,
         'email': email,
         'role': 'scientists',
         'displayName' : displayName,
+        'publications': [],
       };
 
       await _databaseService.setData(

@@ -29,4 +29,49 @@ class DatabaseService {
       return null;
     }
   }
+
+  Future<List<Map<String, dynamic>>> getAllDocuments(
+      String collectionName) async {
+    List<Map<String, dynamic>> documents = [];
+
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection(collectionName).get();
+
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        documents.add(documentSnapshot.data() as Map<String, dynamic>);
+      }
+
+      return documents;
+    } catch (e) {
+      print('Error getting documents: $e');
+      return [];
+    }
+  }
+
+  Future<void> addPublicationToScientist({
+    required String scientistUid,
+    required Map<String, dynamic> publicationData,
+  }) async {
+    try {
+      DocumentSnapshot scientistSnapshot = await FirebaseFirestore.instance
+          .collection('scientists')
+          .doc(scientistUid)
+          .get();
+
+      List<Map<String, dynamic>> currentPublications =
+          List<Map<String, dynamic>>.from(scientistSnapshot['publications']);
+
+      currentPublications.add(publicationData);
+
+      await FirebaseFirestore.instance
+          .collection('scientists')
+          .doc(scientistUid)
+          .update({
+        'publications': currentPublications,
+      });
+    } catch (e) {
+      print('Error adding publication to scientist: $e');
+    }
+  }
 }

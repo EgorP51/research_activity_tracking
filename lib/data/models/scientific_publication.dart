@@ -1,28 +1,54 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+ScientificPublication scientificPublicationFromJson(String str) =>
+    ScientificPublication.fromJson(json.decode(str));
+
+String scientificPublicationToJson(ScientificPublication data) =>
+    json.encode(data.toJson());
+
 class ScientificPublication {
-  int id;
-  String publicationTitle;
-  int publicationYear;
-  int authorId;
-  int fieldId;
-  String filePath;
+  String? id;
+  String? publicationTitle;
+  String? publicationYear;
+  String? authorId;
+  String? filePath;
 
   ScientificPublication({
-    required this.id,
-    required this.publicationTitle,
-    required this.publicationYear,
-    required this.authorId,
-    required this.fieldId,
-    required this.filePath,
+    this.id,
+    this.publicationTitle,
+    this.publicationYear,
+    this.authorId,
+    this.filePath,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'publication_title': publicationTitle,
-      'publication_year': publicationYear,
-      'author_id': authorId,
-      'field_id': fieldId,
-      'file_path': filePath,
-    };
+  factory ScientificPublication.fromJson(Map<String, dynamic> json) =>
+      ScientificPublication(
+        id: json["id"],
+        publicationTitle: json["publicationTitle"],
+        publicationYear: json["publicationYear"],
+        authorId: json["authorId"],
+        filePath: json["filePath"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "publicationTitle": publicationTitle,
+        "publicationYear": publicationYear,
+        "authorId": authorId,
+        "filePath": filePath,
+      };
+
+  static List<ScientificPublication> parseFromSnapshot(collection) {
+    return List.generate(collection.length, (index) {
+      return ScientificPublication(
+        id: collection[index]['publicationTitle'],
+        authorId: collection[index]['authorId'],
+        filePath: collection[index]['filePath'],
+        publicationTitle: collection[index]['publicationTitle'],
+        publicationYear: collection[index]['publicationYear'],
+      );
+    });
   }
 }
