@@ -6,7 +6,12 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseService _databaseService = DatabaseService();
 
-  Future<UserCredential?> signUpWithEmail(String email, String password, String displayName) async {
+  Future<UserCredential?> signUpWithEmail(
+    String email,
+    String password,
+    String displayName,
+    bool isScientist,
+  ) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -17,10 +22,10 @@ class AuthService {
       await userCredential.user!.updateDisplayName(displayName);
 
       Map<String, dynamic> userData = {
-        'authorId' : userCredential.user!.uid,
+        'authorId': userCredential.user!.uid,
         'email': email,
-        'role': 'scientists',
-        'displayName' : displayName,
+        'role': isScientist ? 'scientists' : 'user',
+        'displayName': displayName,
         'publications': [],
       };
 

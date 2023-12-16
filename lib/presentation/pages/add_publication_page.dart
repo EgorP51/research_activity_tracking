@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:research_activity_tracking/data/database_service.dart';
+import 'package:research_activity_tracking/presentation/pages/profile_page.dart';
 
 class AddPublicationPage extends StatefulWidget {
   const AddPublicationPage({super.key, required this.user});
@@ -136,9 +137,20 @@ class _AddPublicationPageState extends State<AddPublicationPage> {
       publicationData,
     );
 
-    service.addPublicationToScientist(
+    service
+        .addPublicationToScientist(
       scientistUid: widget.user.uid,
       publicationData: publicationData,
-    );
+    )
+        .then((value) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ProfilePage(user: widget.user);
+          },
+        ),
+      );
+    });
   }
 }

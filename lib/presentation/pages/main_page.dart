@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final List<ScientificPublication> list =
-                  ScientificPublication.parseFromSnapshot(snapshot.data);
+              ScientificPublication.parseFromSnapshot(snapshot.data);
 
               return RefreshIndicator(
                 onRefresh: () async => rebuildAllChildren(context),
@@ -73,15 +73,16 @@ class _MainPageState extends State<MainPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ScientificPublicationPage(
-                                  publication: publication,
-                                ),
+                                builder: (context) =>
+                                    ScientificPublicationPage(
+                                      publication: publication,
+                                    ),
                               ),
                             );
                           },
                           title: Text(publication.publicationTitle ?? ''),
                           subtitle:
-                              Text(publication.publicationYear.toString()),
+                          Text(publication.publicationYear.toString()),
                           trailing: Text(
                             (publication.verified == true)
                                 ? 'verified'
@@ -100,30 +101,32 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       drawer: Drawer(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 70),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfilePage(user: widget.user!),
+        child: FutureBuilder(
+          future: DatabaseService().getData('scientists', widget.user!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 70),
+                    InkWell(
+                      onTap: () {
+                        if (snapshot.data?['role'] != 'user') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfilePage(user: widget.user!),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Icon(CupertinoIcons.person, size: 50),
                     ),
-                  );
-                },
-                child: const Icon(CupertinoIcons.person, size: 50),
-              ),
-              Text(widget.user?.displayName ?? 'user'),
-              FutureBuilder(
-                future:
-                    DatabaseService().getData('scientists', widget.user!.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data?['role'] == 'admin') {
-                      return CupertinoButton(
+                    Text(snapshot.data?['displayName']),
+                    if (snapshot.data?['role'] == 'admin')
+                      CupertinoButton(
                         child: const Text('go to admin page'),
                         onPressed: () {
                           Navigator.push(
@@ -133,39 +136,39 @@ class _MainPageState extends State<MainPage> {
                             ),
                           );
                         },
-                      );
-                    } else if (snapshot.data?['role'] == 'scientific adviser') {
-                      return CupertinoButton(
+                      ),
+                    if (snapshot.data?['role'] == 'scientific adviser')
+                      CupertinoButton(
                         child: const Text('scientific adviser page'),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ScientificAdviserPage(),
+                              builder: (
+                                  context) => const ScientificAdviserPage(),
                             ),
                           );
                         },
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
-              const Spacer(),
-              CupertinoButton(onPressed: (){}, child: const Text('Info about us')),
-              CupertinoButton(onPressed: (){}, child: const Text('Privacy policy')),
-              IconButton(
-                onPressed: () {
-                  AuthService().signOut();
-                },
-                icon: const Icon(Icons.login_rounded),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+                      ),
+                    const Spacer(),
+                    CupertinoButton(
+                        onPressed: () {}, child: const Text('Info about us')),
+                    CupertinoButton(
+                        onPressed: () {}, child: const Text('Privacy policy')),
+                    IconButton(
+                      onPressed: () {
+                        AuthService().signOut();
+                      },
+                      icon: const Icon(Icons.login_rounded),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
         ),
       ),
     );

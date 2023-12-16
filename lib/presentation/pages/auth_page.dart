@@ -28,6 +28,8 @@ class _AuthWidgetState extends State<AuthWidget> {
   late final TextEditingController _firstNameController;
   late final TextEditingController _lastNameController;
 
+  bool isSatanist = false;
+
   @override
   void initState() {
     _emailController = TextEditingController();
@@ -90,6 +92,18 @@ class _AuthWidgetState extends State<AuthWidget> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    if (currentState == PageState.registration)
+                      CheckboxListTile(
+                        title: const Text("Are you scientist?"),
+                        value: isSatanist,
+                        onChanged: (newValue) {
+                          setState(() {
+                            isSatanist = newValue!;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -126,9 +140,11 @@ class _AuthWidgetState extends State<AuthWidget> {
                           );
                         } else {
                           AuthService().signUpWithEmail(
-                              _emailController.text,
-                              _passwordController.text,
-                              '${_firstNameController.text} ${_lastNameController.text}');
+                            _emailController.text,
+                            _passwordController.text,
+                            '${_firstNameController.text} ${_lastNameController.text}',
+                            isSatanist,
+                          );
                         }
                       },
                     )

@@ -21,8 +21,8 @@ class ScientificPublicationPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
               'Title: ${publication.publicationTitle}',
@@ -31,11 +31,21 @@ class ScientificPublicationPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text('year: ${publication.publicationYear}',style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.normal,
-            ),),
-            const SizedBox(height: 90),
+            Text(
+              'year: ${publication.publicationYear}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            Center(
+              child: Stack(
+                alignment: Alignment.center,
+                  children: [
+                Image.asset('assets/S8JC.gif'),
+                const Text('4', style: TextStyle(color: Colors.white, fontSize: 200),),
+              ]),
+            ),
             Center(
               child: InkWell(
                 child: Column(
