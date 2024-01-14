@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -10,9 +11,13 @@ class DatabaseService {
   ) async {
     try {
       await _db.collection(collection).doc(document).set(data);
-      print('Data added successfully');
+      if (kDebugMode) {
+        print('Data added successfully');
+      }
     } catch (e) {
-      print('Error adding data: $e');
+      if (kDebugMode) {
+        print('Error adding data: $e');
+      }
     }
   }
 
@@ -25,7 +30,9 @@ class DatabaseService {
           await _db.collection(collection).doc(document).get();
       return snapshot.data() as Map<String, dynamic>?;
     } catch (e) {
-      print('Error getting data: $e');
+      if (kDebugMode) {
+        print('Error getting data: $e');
+      }
       return null;
     }
   }
@@ -44,7 +51,9 @@ class DatabaseService {
 
       return documents;
     } catch (e) {
-      print('Error getting documents: $e');
+      if (kDebugMode) {
+        print('Error getting documents: $e');
+      }
       return [];
     }
   }
@@ -71,7 +80,9 @@ class DatabaseService {
         'publications': currentPublications,
       });
     } catch (e) {
-      print('Error adding publication to scientist: $e');
+      if (kDebugMode) {
+        print('Error adding publication to scientist: $e');
+      }
     }
   }
 
@@ -84,7 +95,9 @@ class DatabaseService {
         'role': newRole,
       });
     } catch (e) {
-      print('Error changing user role: $e');
+      if (kDebugMode) {
+        print('Error changing user role: $e');
+      }
       rethrow;
     }
   }
@@ -93,7 +106,9 @@ class DatabaseService {
     try {
       await _db.collection('publications').doc(publicationId).delete();
     } catch (e) {
-      print('Error deleting publication: $e');
+      if (kDebugMode) {
+        print('Error deleting publication: $e');
+      }
       rethrow;
     }
   }
@@ -104,11 +119,13 @@ class DatabaseService {
         'verified': "true",
       });
 
-      print('Publication verification status updated successfully');
+      if (kDebugMode) {
+        print('Publication verification status updated successfully');
+      }
     } catch (e) {
-      print('Error updating publication verification status: $e');
-      // Handle the error as needed
-      throw e;
+      if (kDebugMode) {
+        print('Error updating publication verification status: $e');
+      }
     }
   }
 }

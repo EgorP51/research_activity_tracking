@@ -67,8 +67,8 @@ class AdminPage extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title:
-                                        const Text('set as scientific adviser'),
+                                    title: Text(
+                                        'set ${snapshot.data[index]['displayName']} as scientific adviser'),
                                     actions: [
                                       CupertinoButton(
                                         child: const Text('yes'),
@@ -132,7 +132,8 @@ class AdminPage extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: const Text('Delete publications: '),
+                                    title: Text(
+                                        'Delete publication\n(${snapshot.data[index]['publicationTitle']}): '),
                                     actions: [
                                       CupertinoButton(
                                         child: const Text('yes'),

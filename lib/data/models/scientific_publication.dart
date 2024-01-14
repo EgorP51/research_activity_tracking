@@ -50,7 +50,7 @@ class ScientificPublication {
         filePath: collection[index]['filePath'],
         publicationTitle: collection[index]['publicationTitle'],
         publicationYear: collection[index]['publicationYear'],
-        verified: (collection[index]['verified'] == "true")
+        verified: (collection[index]['verified'])
       );
     });
   }

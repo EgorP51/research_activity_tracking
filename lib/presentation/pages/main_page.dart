@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> {
     rebuildAllChildren(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('main_page'),
+        title: const Text('Головна сторінка'),
         backgroundColor: Colors.black,
         centerTitle: true,
         actions: [
@@ -66,6 +66,8 @@ class _MainPageState extends State<MainPage> {
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final publication = list[index];
+                      print(publication.publicationTitle);
+                      print(publication.verified);
                       return Card(
                         elevation: 5,
                         child: ListTile(
@@ -166,7 +168,12 @@ class _MainPageState extends State<MainPage> {
                 ),
               );
             } else {
-              return const SizedBox();
+              return IconButton(
+                onPressed: () {
+                  AuthService().signOut();
+                },
+                icon: const Icon(Icons.login_rounded),
+              );
             }
           },
         ),

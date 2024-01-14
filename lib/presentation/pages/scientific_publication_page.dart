@@ -14,15 +14,15 @@ class ScientificPublicationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('publication_page'),
+        title: const Text('Публікація'),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               'Title: ${publication.publicationTitle}',
@@ -31,6 +31,7 @@ class ScientificPublicationPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 20),
             Text(
               'year: ${publication.publicationYear}',
               style: const TextStyle(
@@ -38,14 +39,7 @@ class ScientificPublicationPage extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            Center(
-              child: Stack(
-                alignment: Alignment.center,
-                  children: [
-                Image.asset('assets/S8JC.gif'),
-                const Text('4', style: TextStyle(color: Colors.white, fontSize: 200),),
-              ]),
-            ),
+            SizedBox(height: 100),
             Center(
               child: InkWell(
                 child: Column(

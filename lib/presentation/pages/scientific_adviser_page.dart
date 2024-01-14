@@ -21,7 +21,7 @@ class ScientificAdviserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('admin_page'),
+        title: const Text('scientific_adviser_page'),
         centerTitle: true,
         backgroundColor: Colors.black,
         actions: [
@@ -65,35 +65,46 @@ class ScientificAdviserPage extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                  title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                  title: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CupertinoButton(
-                                    child: const Text('read'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ScientificPublicationPage(
-                                            publication:
-                                                ScientificPublication.fromJson(
-                                              snapshot.data[index],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                  Text(
+                                    snapshot.data[index]['publicationTitle'] ??
+                                        '',
+                                    style: TextStyle(fontSize: 17),
                                   ),
-                                  CupertinoButton(
-                                    child: const Text('verify'),
-                                    onPressed: () {
-                                      DatabaseService().verifyPublication(
-                                          snapshot.data[index]
-                                              ['publicationTitle']);
-                                      Navigator.pop(context);
-                                    },
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CupertinoButton(
+                                        child: const Text('read'),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ScientificPublicationPage(
+                                                publication:
+                                                    ScientificPublication
+                                                        .fromJson(
+                                                  snapshot.data[index],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      CupertinoButton(
+                                        child: const Text('verify'),
+                                        onPressed: () {
+                                          DatabaseService().verifyPublication(
+                                              snapshot.data[index]
+                                                  ['publicationTitle']);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ));

@@ -45,10 +45,6 @@ class _AddPublicationPageState extends State<AddPublicationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'УгА БугА',
-                style: TextStyle(fontSize: 50),
-              ),
               TextFormField(
                 controller: _publicationNameController,
                 decoration: const InputDecoration(
@@ -84,6 +80,12 @@ class _AddPublicationPageState extends State<AddPublicationPage> {
                 child: CupertinoButton(
                   color: Colors.black,
                   onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    );
                     uploadFile();
                   },
                   child: const Text('publish'),
